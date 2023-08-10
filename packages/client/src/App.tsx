@@ -1,5 +1,8 @@
 import { latticeTestnet } from "@latticexyz/common/chains";
-import { createIndexerClient } from "@latticexyz/store-sync/trpc-indexer";
+import {
+  TableWithRecords,
+  createIndexerClient,
+} from "@latticexyz/store-sync/trpc-indexer";
 import { useEffect, useState } from "react";
 import { createPublicClient, fallback, http, webSocket } from "viem";
 
@@ -14,8 +17,13 @@ const indexer = createIndexerClient({
   url: "https://indexer.base-mainnet-mud-services.linfra.xyz",
 });
 
+const style = { borderStyle: "solid", borderCollapse: "collapse" };
+
 export const App = () => {
-  const [result, setResult] = useState();
+  const [result, setResult] = useState<{
+    blockNumber: bigint | null;
+    tables: TableWithRecords[];
+  }>();
 
   useEffect(() => {
     indexer.findAll
@@ -28,8 +36,6 @@ export const App = () => {
 
   console.log(result);
 
-  const style = { borderStyle: "solid", borderCollapse: "collapse" };
-
   return (
     <>
       <div>
@@ -37,7 +43,7 @@ export const App = () => {
         <span>
           {result &&
             result.tables.map((table) => (
-              <div key={table.id}>
+              <div key={table.tableId}>
                 <div>
                   <h2>{table.name}</h2>
                   <table style={style}>
@@ -61,12 +67,12 @@ export const App = () => {
                           <tr key={i} style={style}>
                             {Object.values(record.key).map((value, j) => (
                               <td key={j} style={style}>
-                                {value}
+                                {value.toString()}
                               </td>
                             ))}
                             {Object.values(record.value).map((value, j) => (
                               <td key={j} style={style}>
-                                {value}
+                                {value.toString()}
                               </td>
                             ))}
                           </tr>
