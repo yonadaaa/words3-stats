@@ -68,6 +68,7 @@ export const App = () => {
     blockNumber: bigint | null;
     tables: TableWithRecords[];
   }>();
+  const [names, setNames] = useState<string[]>([]);
 
   useEffect(() => {
     indexer.findAll
@@ -75,10 +76,11 @@ export const App = () => {
         chainId: publicClient.chain.id,
         address: address,
       })
-      .then(setResult);
+      .then((r) => {
+        setResult(r);
+        setNames(r.tables.map((table) => table.name));
+      });
   }, []);
-
-  const names = result ? result.tables.map((table) => table.name) : [];
 
   return (
     <div>

@@ -15,11 +15,11 @@ const router = createBrowserRouter([
         <Link to="/">
           <h1>Words3 Stats</h1>
         </Link>
-        <div style={{ padding: 4 }}>
-          <Link to="about">MUD Tables</Link>
-        </div>
-        <div style={{ padding: 4 }}>
+        <div>
           <Link to="letters">Most played letters</Link>
+        </div>
+        <div>
+          <Link to="about">MUD Tables</Link>
         </div>
       </div>
     ),
