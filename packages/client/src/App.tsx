@@ -19,7 +19,52 @@ const indexer = createIndexerClient({
 
 const style = { borderStyle: "solid", borderCollapse: "collapse" };
 
+const MUDTable = ({ table }: { table: TableWithRecords }) => {
+  return (
+    <div key={table.tableId}>
+      <div>
+        <h2>{table.name}</h2>
+        <table style={style}>
+          <thead>
+            <tr style={style}>
+              {Object.keys(table.keySchema).map((s) => (
+                <th key={s} style={style}>
+                  Key #{s}
+                </th>
+              ))}
+              {Object.keys(table.valueSchema).map((s) => (
+                <th key={s} style={style}>
+                  {s}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {table.records.map((record, i) => {
+              return (
+                <tr key={i} style={style}>
+                  {Object.values(record.key).map((value, j) => (
+                    <td key={j} style={style}>
+                      {value.toString()}
+                    </td>
+                  ))}
+                  {Object.values(record.value).map((value, j) => (
+                    <td key={j} style={style}>
+                      {value.toString()}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 export const App = () => {
+  const [selected, setSelected] = useState<string>();
   const [result, setResult] = useState<{
     blockNumber: bigint | null;
     tables: TableWithRecords[];
@@ -34,57 +79,24 @@ export const App = () => {
       .then(setResult);
   }, []);
 
-  console.log(result);
+  const names = result ? result.tables.map((table) => table.name) : [];
 
   return (
-    <>
-      <div>
-        <h1>Tables:</h1>
-        <span>
-          {result &&
-            result.tables.map((table) => (
-              <div key={table.tableId}>
-                <div>
-                  <h2>{table.name}</h2>
-                  <table style={style}>
-                    <thead>
-                      <tr style={style}>
-                        {Object.keys(table.keySchema).map((s) => (
-                          <th key={s} style={style}>
-                            Key #{s}
-                          </th>
-                        ))}
-                        {Object.keys(table.valueSchema).map((s) => (
-                          <th key={s} style={style}>
-                            {s}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {table.records.map((record, i) => {
-                        return (
-                          <tr key={i} style={style}>
-                            {Object.values(record.key).map((value, j) => (
-                              <td key={j} style={style}>
-                                {value.toString()}
-                              </td>
-                            ))}
-                            {Object.values(record.value).map((value, j) => (
-                              <td key={j} style={style}>
-                                {value.toString()}
-                              </td>
-                            ))}
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            ))}
-        </span>
-      </div>
-    </>
+    <div>
+      <h1>Words3 MUD Tables</h1>
+      Select a table:{" "}
+      <select onChange={(event) => setSelected(event.target.value)}>
+        {names.map((name) => (
+          <option key={name} value={name}>
+            {name}
+          </option>
+        ))}
+      </select>
+      {result && result.tables.some((table) => table.name === selected) && (
+        <MUDTable
+          table={result.tables.find((table) => table.name === selected)}
+        />
+      )}
+    </div>
   );
 };
