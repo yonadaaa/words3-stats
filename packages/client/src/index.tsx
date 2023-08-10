@@ -2,6 +2,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
 import { App } from "./App";
 import { Letters } from "./Letters";
+import { Plays } from "./Plays";
 
 const rootElement = document.getElementById("react-root");
 if (!rootElement) throw new Error("React root not found");
@@ -19,6 +20,9 @@ const router = createBrowserRouter([
           <Link to="letters">Most played letters</Link>
         </div>
         <div>
+          <Link to="plays">Best plays</Link>
+        </div>
+        <div>
           <Link to="about">MUD Tables</Link>
         </div>
       </div>
@@ -31,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "letters",
     element: <Letters />,
+  },
+  {
+    path: "plays",
+    element: <Plays />,
   },
 ]);
 
