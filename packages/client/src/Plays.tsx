@@ -52,6 +52,10 @@ export const Plays = () => {
               {play.value["filledWord"].map((letter) =>
                 String.fromCharCode(64 + letter)
               )}{" "}
+              on{" "}
+              {play.value["word"].map((letter) =>
+                String.fromCharCode(64 + letter)
+              )}{" "}
               for {play.points} points
             </div>
           ))}
