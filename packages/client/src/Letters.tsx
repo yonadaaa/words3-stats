@@ -48,13 +48,10 @@ export const Letters = () => {
             };
           });
 
-          d0.sort((a, b) =>
-            a.letter < b.letter ? -1 : a.letter > b.letter ? 1 : 0
-          );
           d1.sort((a, b) => b.y - a.y);
-          d2.sort((a, b) => a.y - b.y);
-          d3.sort((a, b) => a.y - b.y);
-          d4.sort((a, b) => a.y - b.y);
+          d2.sort((a, b) => b.y - a.y);
+          d3.sort((a, b) => b.y - a.y);
+          d4.sort((a, b) => b.y - a.y);
 
           setData([d0, d1, d2, d3, d4]);
         }
