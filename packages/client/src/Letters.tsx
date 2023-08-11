@@ -84,13 +84,13 @@ export const Letters = () => {
           </div>
           <div style={{ borderStyle: "dotted", padding: 16 }}>
             <h2>
-              Letters vs <i>points given multiplied by times played</i>
+              Points given <i>multiplied</i> by times played
             </h2>
             <LetterChart data={data[3]} />
           </div>
           <div style={{ borderStyle: "dotted", padding: 16 }}>
             <h2>
-              Letters vs <i>points given divided by times played</i>
+              Points given <i>divided</i> by times played
             </h2>
             <LetterChart data={data[4]} />
           </div>
