@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { address, indexer, publicClient } from "./App";
+import { address, indexer, publicClient } from "./Tables";
 
 export const Plays = () => {
   const [plays, setPlays] = useState();

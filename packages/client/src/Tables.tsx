@@ -62,7 +62,7 @@ const MUDTable = ({ table }: { table: TableWithRecords }) => {
   );
 };
 
-export const App = () => {
+export const Tables = () => {
   const [selected, setSelected] = useState<string>();
   const [result, setResult] = useState<{
     blockNumber: bigint | null;

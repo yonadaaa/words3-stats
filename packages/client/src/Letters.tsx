@@ -1,31 +1,11 @@
 import { useEffect, useState } from "react";
+import { address, indexer, publicClient } from "./Tables";
 import { Link } from "react-router-dom";
-import { address, indexer, publicClient } from "./App";
-import { LetterChartLive } from "./LetterChartLive";
+import { Data, LetterChart } from "./LetterChart";
+import { POINTS } from "./points";
 
 export const Letters = () => {
-  return (
-    <div>
-      <Link to="/">
-        <h1>Words3 Stats</h1>
-      </Link>
-      <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-        <div>
-          <h2>Letters vs times played</h2>
-          <LetterChartLive />
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <h2>Most played letters</h2>
-          <LettersCount />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const LettersCount = () => {
-  const [letterCounts, setLetterCounts] =
-    useState<{ letter: string; count: number }[]>();
+  const [data, setData] = useState<Data[][]>();
 
   useEffect(() => {
     indexer.findAll
@@ -39,30 +19,84 @@ const LettersCount = () => {
         );
 
         if (letterCount) {
-          const counts = letterCount.records.map((record) => ({
+          const d0 = letterCount.records.map((record) => ({
             letter: String.fromCharCode(64 + (record.key[0] as number)),
-            count: record.value.value as number,
+            y: record.value.value as number,
           }));
+          const d1 = [...d0];
+          const d2 = letterCount.records.map((record) => {
+            const letter = String.fromCharCode(64 + (record.key[0] as number));
+            return {
+              letter,
+              y: POINTS[letter],
+            };
+          });
+          const d3 = letterCount.records.map((record) => {
+            const letter = String.fromCharCode(64 + (record.key[0] as number));
+            const count = record.value.value as number;
+            return {
+              letter,
+              y: POINTS[letter] * count,
+            };
+          });
+          const d4 = letterCount.records.map((record) => {
+            const letter = String.fromCharCode(64 + (record.key[0] as number));
+            const count = record.value.value as number;
+            return {
+              letter,
+              y: count / POINTS[letter],
+            };
+          });
 
-          counts.sort((a, b) => b.count - a.count);
+          d0.sort((a, b) =>
+            a.letter < b.letter ? -1 : a.letter > b.letter ? 1 : 0
+          );
+          d1.sort((a, b) => b.y - a.y);
+          d2.sort((a, b) => a.y - b.y);
+          d3.sort((a, b) => a.y - b.y);
+          d4.sort((a, b) => a.y - b.y);
 
-          setLetterCounts(counts);
+          setData([d0, d1, d2, d3, d4]);
         }
       });
   }, []);
 
   return (
     <div>
-      {letterCounts ? (
-        <div>
-          {letterCounts.map(({ letter, count }) => (
-            <div key={letter}>
-              <b>{letter}</b>: {count}
-            </div>
-          ))}
+      <Link to="/">
+        <h1>Words3 Stats</h1>
+      </Link>
+      {data ? (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-around",
+          }}
+        >
+          <div style={{ borderStyle: "dotted", padding: 16 }}>
+            <h2>Most commonly played letters</h2>
+            <LetterChart data={data[1]} />
+          </div>
+          <div style={{ borderStyle: "dotted", padding: 16 }}>
+            <h2>Points given per letter</h2>
+            <LetterChart data={data[2]} />
+          </div>
+          <div style={{ borderStyle: "dotted", padding: 16 }}>
+            <h2>
+              Letters vs <i>points given multiplied by times played</i>
+            </h2>
+            <LetterChart data={data[3]} />
+          </div>
+          <div style={{ borderStyle: "dotted", padding: 16 }}>
+            <h2>
+              Letters vs <i>points given divided by times played</i>
+            </h2>
+            <LetterChart data={data[4]} />
+          </div>
         </div>
       ) : (
-        <div>Loading...</div>
+        <div>loading...</div>
       )}
     </div>
   );
