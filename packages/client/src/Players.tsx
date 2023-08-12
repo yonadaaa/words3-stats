@@ -76,6 +76,7 @@ export const Players = () => {
         <h1>Words3 Stats</h1>
       </Link>
       {jackpot && <div>Jackpot: {formatEther(jackpot)} ETH</div>}
+      <div>Key: address - points - predicted payout</div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {data ? <PlayersChart data={data} /> : <div>loading...</div>}
       </div>
